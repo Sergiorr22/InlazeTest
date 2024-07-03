@@ -71,7 +71,6 @@ public class SignUpStep extends PageObject {
     }
 
     public void btnDeshabilitado(){
-
         try {
             boolean isEnabled = accionesWeb.confirmarElementoNoHabilitado(SignUpUI.getBtnConfirm());
             accionesWeb.bordearElemento(SignUpUI.getBtnConfirm());
