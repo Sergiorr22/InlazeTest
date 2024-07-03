@@ -1,19 +1,96 @@
-plugins {
-    id 'java'
-}
+group 'Test'
+version '1.0'
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+apply plugin: 'java-library'
+apply plugin: 'jacoco'
+apply plugin: 'maven-publish'
+apply plugin: "net.serenity-bdd.serenity-gradle-plugin"
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
+
+
+compileJava.options.encoding = "UTF-8"
+compileTestJava.options.encoding = "UTF-8"
+
+def serenityCoreVersion='3.3.2'
+def logVersion = '1.2.10'
+def lombokVersion = '1.18.22'
+def versionApachePoi='5.2.2'
+
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "net.serenity-bdd:serenity-gradle-plugin:3.3.2"
+    }
 }
 
-test {
-    useJUnitPlatform()
+
+dependencies {
+
+    implementation ("net.serenity-bdd:serenity-core:${serenityCoreVersion}")
+    implementation "net.serenity-bdd:serenity-junit5:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-cucumber:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-rest-assured:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-ensure:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-screenplay:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityCoreVersion}"
+    implementation "net.serenity-bdd:serenity-screenplay-rest:${serenityCoreVersion}"
+    implementation "ch.qos.logback:logback-classic:${logVersion}"
+    implementation "ch.qos.logback:logback-core:${logVersion}"
+    implementation group: 'com.sikulix', name: 'sikulixapi', version: '2.0.5'
+    implementation group: 'com.itextpdf', name: 'itextpdf', version: '5.5.12'
+    implementation 'com.google.code.gson:gson:2.2.2'
+    implementation group: 'com.mopano', name: 'hibernate-json-org-contributor', version: '1.0'
+    implementation group: 'org.apache.poi', name: 'poi', version: "${versionApachePoi}"
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: "${versionApachePoi}"
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+
+
+
+    implementation 'io.github.bonigarcia:webdrivermanager:5.6.3'
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+    testCompileOnly "org.projectlombok:lombok:${lombokVersion}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombokVersion}"
+
+
 }
+test {
+    useJUnit {
+        include "**/*";
+        gradle.startParameter.continueOnFailure = true
+        testLogging.showStandardStreams = true
+        systemProperties System.getProperties()
+        systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
+    }
+}
+
+serenity {
+    testRoot = "co.com.templay.pom.runners"
+    requirementsBaseDir = "src/test/resources/features"
+    reports = ["single-page-html"]
+}
+
+task ejecutarPDFCreator(type: JavaExec) {
+    mainClass = 'utilities.GenerarEvidenciasEnPDF'
+    classpath = sourceSets.main.runtimeClasspath
+    doLast {
+        println 'Reportes Creados en PDF Exitoso.'
+    }
+}
+aggregate.finalizedBy ejecutarPDFCreator
+
+gradle.startParameter.continueOnFailure = true
+test.finalizedBy(aggregate)
