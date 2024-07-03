@@ -1,6 +1,5 @@
 package ui;
 
-
 import net.thucydides.core.pages.PageObject;
 import org.openqa.selenium.By;
 
@@ -13,6 +12,7 @@ public class SignUpUI  extends PageObject {
     private static final By LBL_REPEATPASS = By.xpath("//app-password//input[@id='confirm-password']");
     private static final By BTN_CONFIRM = By.xpath("//button[.=' Sign up ']");
     private static final By LBL_OK = By.xpath("//div[.='Successful registration!']");
+    private static final By LBL_NOMATCH = By.xpath("//span[.=' Passwords do not match ']");
 
     public static By getBtnSignup(){
         return BTN_SIGNUP;
@@ -42,5 +42,7 @@ public class SignUpUI  extends PageObject {
         return LBL_OK;
     }
 
-
+    public static By getLblNomatch() {
+        return LBL_NOMATCH;
+    }
 }

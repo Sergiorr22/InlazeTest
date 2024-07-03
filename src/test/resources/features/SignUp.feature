@@ -21,24 +21,28 @@
       And Diligencio los demas campos de manera correcta
       Then el sistema no permite el registro
 
+    @CP004
     Scenario: Email duplicado
       Given ingreso al formulario de registro
       When diligencio el campo Email ingreso un email ya existente
       And Diligencio los demas campos de manera correcta
       Then el sistema no permite el registro
 
+    @CP005
     Scenario: Contraseña no cumple con seguridad
       Given ingreso al formulario de registro
       When diligencio el campo Password de manera incorrecta
       And Diligencio los demas campos de manera correcta
       Then el sistema no permite el registro
 
+    @CP006
     Scenario: Campos obligatorios vacios
       Given ingreso al formulario de registro
       When dejo el campo nombre vacio
-      And Diligencio los demas campos de manera correcta
+      And Diligencio los demas campos sin el nombre
       Then el sistema no permite el registro
 
+    @CP007
     Scenario: Contraseñas no coinciden
       Given ingreso al formulario de registro
       When diligencio los campos de contraseña con diferente informacion

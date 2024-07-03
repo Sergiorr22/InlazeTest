@@ -39,6 +39,11 @@ public class SignUpDef {
         signUpStep.diligenciarDemasCampos();
     }
 
+    @When("Diligencio los demas campos sin el nombre")
+    public void diligencioLosDemasCampos() {
+        signUpStep.diligenciarSinName();
+    }
+
     @Then("el sistema no permite el registro")
     public void elSistemaNoPermiteElRegistro() {
         signUpStep.btnDeshabilitado();
@@ -51,29 +56,25 @@ public class SignUpDef {
 
     @When("diligencio el campo Email ingreso un email ya existente")
     public void diligencioElCampoEmailIngresoUnEmailYaExistente() {
-
+        signUpStep.emailExistente();
     }
 
     @When("diligencio el campo Password de manera incorrecta")
     public void diligencioElCampoPasswordDeManeraIncorrecta() {
-
+        signUpStep.passwordFailed();
     }
 
     @When("dejo el campo nombre vacio")
     public void dejoElCampoNombreVacio() {
-
+        signUpStep.camposVacios();
     }
 
     @When("diligencio los campos de contraseña con diferente informacion")
     public void diligencioLosCamposDeContraseñaConDiferenteInformacion() {
-
+        signUpStep.passwordSinCoincidencia();
     }
     @Then("el sistema muestra mensaje de no coincidencia")
     public void elSistemaMuestraMensajeDeNoCoincidencia() {
-
+        signUpStep.passwordNoMatch();
     }
-
-
-
-
 }

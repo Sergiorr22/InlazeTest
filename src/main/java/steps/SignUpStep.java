@@ -1,19 +1,15 @@
 package steps;
 
 
-import net.thucydides.core.annotations.Steps;
 import net.thucydides.core.pages.PageObject;
 import net.thucydides.core.util.EnvironmentVariables;
 import org.junit.Assert;
-import org.openqa.selenium.WebElement;
 import ui.SignUpUI;
 import utilities.AccionesWeb;
 import utilities.RandomUserDataGenerator;
-import utilities.UtilDatosAleatorios;
 import org.openqa.selenium.By;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class SignUpStep extends PageObject {
 
@@ -75,9 +71,14 @@ public class SignUpStep extends PageObject {
     }
 
     public void btnDeshabilitado(){
-        boolean isEnabled = accionesWeb.confirmarElementoNoHabilitado(SignUpUI.getBtnConfirm());
-        Assert.assertFalse(isEnabled);
-        accionesWeb.bordearElemento(SignUpUI.getBtnConfirm());
+
+        try {
+            boolean isEnabled = accionesWeb.confirmarElementoNoHabilitado(SignUpUI.getBtnConfirm());
+            accionesWeb.bordearElemento(SignUpUI.getBtnConfirm());
+            Assert.assertTrue("El boton no esta deshabilitado como se esperaba",isEnabled);
+        } catch (Exception e) {
+            Assert.fail("La prueba fallo debido a que el boton esta habilitado" + e.getMessage());
+        }
     }
 
     public void emailIncorrecto(){
@@ -85,5 +86,49 @@ public class SignUpStep extends PageObject {
         accionesWeb.escribirTexto(SignUpUI.getLblEmail(), "Test@fail");
         accionesWeb.bordearElemento(SignUpUI.getLblEmail());
     }
+
+    public void emailExistente(){
+        accionesWeb.esperoElementoPresente(SignUpUI.getLblEmail());
+        accionesWeb.escribirTexto(SignUpUI.getLblEmail(), "sergio@test.com");
+        accionesWeb.bordearElemento(SignUpUI.getLblEmail());
+    }
+
+    public void passwordFailed(){
+        accionesWeb.esperoElementoPresente(SignUpUI.getLblPassword());
+        accionesWeb.escribirTexto(SignUpUI.getLblPassword(), "Prueba123");
+        accionesWeb.bordearElemento(SignUpUI.getLblPassword());
+        accionesWeb.esperoElementoPresente(SignUpUI.getLblRepeatpass());
+        accionesWeb.escribirTexto(SignUpUI.getLblRepeatpass(), "Prueba123");
+        accionesWeb.bordearElemento(SignUpUI.getLblRepeatpass());
+    }
+
+    public void camposVacios(){
+        accionesWeb.esperoElementoPresente(SignUpUI.getLblName());
+        accionesWeb.escribirTexto(SignUpUI.getLblName(), "");
+        accionesWeb.bordearElemento(SignUpUI.getLblName());
+    }
+
+    public void diligenciarSinName(){
+        fillFieldIfEmpty(SignUpUI.getLblEmail(), RandomUserDataGenerator.generateRandomEmail());
+        fillFieldIfEmpty(SignUpUI.getLblPassword(), "Prueba123*");
+        fillFieldIfEmpty(SignUpUI.getLblRepeatpass(), "Prueba123*");
+    }
+
+    public void passwordSinCoincidencia(){
+        accionesWeb.esperoElementoPresente(SignUpUI.getLblPassword());
+        accionesWeb.escribirTexto(SignUpUI.getLblPassword(), "Prueba123*");
+        accionesWeb.bordearElemento(SignUpUI.getLblPassword());
+        accionesWeb.esperoElementoPresente(SignUpUI.getLblRepeatpass());
+        accionesWeb.escribirTexto(SignUpUI.getLblRepeatpass(), "Prueba1234*");
+        accionesWeb.bordearElemento(SignUpUI.getLblRepeatpass());
+    }
+
+    public void passwordNoMatch(){
+        accionesWeb.esperoElementoPresente(SignUpUI.getLblNomatch());
+        accionesWeb.bordearElemento(SignUpUI.getLblNomatch());
+    }
+
+
+
 
 }
